@@ -1,0 +1,36 @@
+  def open_in_browser(self, event):
+        """
+        从浏览器中打开指定网页
+        :param
+        :return:
+        """
+        item = self.treeview_play_online.selection()
+        if(item):
+            item_text = self.treeview_play_online.item(item, "values")
+            url = item_text[2]
+            open(url)
+
+
+    def open_in_browser_cloud_disk(self, event):
+        """
+        从浏览器中打开指定网页
+        :param
+        :return:
+        """
+        item = self.treeview_save_cloud_disk.selection()
+        if(item):
+            item_text = self.treeview_save_cloud_disk.item(item, "values")
+            url = item_text[2]
+            open(url)
+
+    def open_in_browser_bt_download(self, event):
+        """
+        从浏览器中打开指定网页
+        :param
+        :return:
+        """
+        item = self.treeview_bt_download.selection()
+        if(item):
+            item_text = self.treeview_bt_download.item(item, "values")
+            url = item_text[2]
+            open(url)
