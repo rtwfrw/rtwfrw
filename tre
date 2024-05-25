@@ -1,0 +1,25 @@
+ 
+# 保存数据
+def writeData(movieList):
+    with open('douban.csv', 'w', encoding='utf-8', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['title', 'star', 'quote', 'url'])
+ 
+        writer.writeheader()  # 写入表头
+ 
+        for each in movieList:
+            writer.writerow(each)
+ 
+ 
+if __name__ == '__main__':
+    movieList = []
+ 
+    # 一共有10页
+ 
+    for i in range(10):
+        pageLink = doubanUrl.format(i * 25)
+ 
+        source = getSource(pageLink)
+ 
+        movieList += getEveryItem(source)
+ 
+    writeData(movieList)
