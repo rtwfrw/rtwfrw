@@ -1,0 +1,11 @@
+// 该url的url.search为"?foo=1&bar=2"
+let url = new URL("https://example.com?foo=1&bar=2"); 
+// 创建一个URLSearchParams实例，即URLSearchParams { 'foo' => '1', 'bar' => '2' }
+let searchParams = new URLSearchParams(url.search); 
+ 
+// 键值对列表URLSearchParams Iterator { [ 'foo', '1' ], [ 'bar', '2' ] }
+console.log(searchParams.entries()); 
+ 
+// 将键值对列表转换为一个对象
+let res = Object.fromEntries(searchParams.entries()); 
+console.log(res); //{ foo: '1', bar: '2' }
