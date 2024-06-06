@@ -1,0 +1,25 @@
+//通过appid和secret来获取token
+String tokenUrl = String.format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s", appId, appSecret);
+String accessToken = String.valueOf(JSON.parseObject(HttpUtil.get(tokenUrl)).get("access_token"));
+ 
+
+//通过token和code来获取用户手机号
+String url = "https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=" + accessToken + "&code=" + code;
+
+Map<String, String> paramMap = new HashMap<>();
+paramMap.put("code", code);
+HttpHeaders headers = new HttpHeaders();
+HttpEntity<Map<String, String>> httpEntity = new HttpEntity<>(paramMap, headers);
+ResponseEntity<Object> response = restTemplate.postForEntity(url, httpEntity, Object.class);
+String body = String.valueOf(response.getBody());// 解析JSON字符串
+log.info(body);
+// 定义一个正则表达式来匹配 phoneNumber
+Pattern pattern = Pattern.compile("phoneNumber=(\\d+)");
+Matcher matcher = pattern.matcher(body);
+if (matcher.find()) {
+    String phoneNumber = matcher.group(1); // 获取括号中的数字
+    log.info("phoneNumber:" + phoneNumber);
+    return AjaxResult.success(phoneNumber);
+} else {
+    return AjaxResult.error("手机号获取失败！");
+}
