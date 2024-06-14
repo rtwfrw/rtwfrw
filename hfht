@@ -1,0 +1,72 @@
+const db = wx.cloud.database({
+  env: '你的环境id'
+})
+Page({
+  data: {
+    // 传递过来的商品id
+    goods_id:'',
+    // 商品详情
+    goodsObj:[]
+  },
+  onLoad: function (options) {
+    let that = this;
+    console.log(this.options.goods_id)
+    this.setData({
+      goods_id:this.options.goods_id,
+    })
+    this.getGoodsDetail();
+  },
+  // 获取商品详情数据
+  async getGoodsDetail(){
+    let goods_id = parseInt(this.data.goods_id);
+    await db.collection("goodsdata")
+    .where({
+      goods_id:goods_id
+    })
+    .get()
+    .then(result=>{
+      this.setData({
+        goodsObj:result.data[0]
+      })
+      console.log(this.data.goodsObj);
+    })
+  },
+  // 点击图片放大预览
+  handlePreviewImage(e){
+    // 要预览的图片数组
+    const urls = this.data.goodsObj.pictures.pic_url;
+    // 接收传递过来的图片url
+    const current = e.currentTarget.dataset.url;
+    wx.previewImage({
+      current:current,
+      urls: urls
+    })
+  },
+  //点击加入购物车 
+  handleCartAdd(){
+      // 1 获取缓存中的购物车数组
+    let cart = wx.getStorageSync("cart")||[];
+    console.log(cart);
+    // 2 判断商品对象是否存在于购物车数组中
+    console.log(this.data.goodsObj);
+    let index = cart.findIndex(v=>v.goods_id===this.data.goodsObj.goods_id);
+    if(index === -1){
+      // 3 不存在 第一次添加
+      this.data.goodsObj.num=1;
+      this.data.goodsObj.checked=true;
+      cart.push(this.data.goodsObj);
+    }else{
+      // 4 已经存在购物车数据 执行num++
+      cart[index].num++;
+    }
+    // 5 把购物车重新添加回缓存中
+    wx.setStorageSync('cart', cart);
+    // 6 弹窗提示
+    wx.showToast({
+      title: '加入成功',
+      icon:'success',
+      // true 防止用户手抖 疯狂点击
+      mask:true
+    })
+  }
+})
