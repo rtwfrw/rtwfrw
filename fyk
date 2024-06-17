@@ -1,0 +1,37 @@
+# 特殊好友分析
+def analyze_special_friends():
+
+    # 星标好友(很重要的人), 不让他看我的朋友圈的好友, 不看他朋友圈的好友, 消息置顶好友, 陌生人
+    star_friends, hide_my_post_friends, hide_his_post_friends, sticky_on_top_friends, stranger_friends = 0, 0, 0, 0, 0
+
+    for user in friends:
+
+
+        # 星标好友为1,为0表示非星标,不存在星标选项的为陌生人
+        if('StarFriend' in (user.raw).keys()):
+            if((user.raw)['StarFriend'] == 1):
+                star_friends += 1
+        else:
+            stranger_friends += 1
+
+        # 好友类型及权限：1和3好友，259和33027不让他看我的朋友圈，65539和65537和66051不看他的朋友圈，65795两项设置全禁止, 73731陌生人
+        if((user.raw)['ContactFlag'] in [259, 33027, 65795]):
+            hide_my_post_friends += 1
+        if ((user.raw)['ContactFlag'] in [66051, 65537, 65539, 65795]):
+            hide_his_post_friends += 1
+
+        # 消息置顶好友为2051
+        if ((user.raw)['ContactFlag'] in [2051]):
+            sticky_on_top_friends += 1
+
+        # 陌生人
+        if ((user.raw)['ContactFlag'] in [73731]):
+            stranger_friends += 1
+
+
+    bar = Bar()
+    bar.add_xaxis(['星标', '不让他看我朋友圈', '不看他朋友圈', '消息置顶', '陌生人'])
+    bar.add_yaxis('特殊好友分析', [star_friends, hide_my_post_friends, hide_his_post_friends, sticky_on_top_friends, stranger_friends])
+    bar.render('data/特殊好友分析.html')
+
+h
