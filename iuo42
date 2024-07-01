@@ -1,0 +1,10 @@
+a = eval(input())
+b = eval(input())
+c = eval(input())
+if a+b>c and a+c>b and b+c>a:
+    p = (a+b+c)/2
+    area = (p*(p-a)*(p-b)*(p-c))**0.5
+    print('YES')
+    print(f'{area:.2f}')
+else:
+    print('NO')
